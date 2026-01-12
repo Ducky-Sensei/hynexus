@@ -10,8 +10,8 @@ import {
     UpdateDateColumn,
 } from 'typeorm';
 import { RefreshToken } from '../auth/entities/refresh-token.entity';
-import { Organization } from '../organization/organization.entity';
 import { Role } from '../rbac/entities/role.entity';
+import { Server } from '../server/server.entity';
 
 @Entity('users')
 export class User {
@@ -60,6 +60,9 @@ export class User {
     @Column({ default: false })
     isBanned: boolean;
 
+    @Column({ default: false })
+    isAdmin: boolean;
+
     @Column({ type: 'date', nullable: true })
     lastLogin: Date | null;
 
@@ -80,27 +83,16 @@ export class User {
     )
     refreshTokens: RefreshToken[];
 
-    @ManyToMany(
-        () => Organization,
-        (organization) => organization.members,
-        {
-            nullable: true,
-        },
-    )
-    @JoinTable({
-        name: 'user_organizations',
-        joinColumn: { name: 'userId', referencedColumnName: 'id' },
-        inverseJoinColumn: {
-            name: 'organizationId',
-            referencedColumnName: 'id',
-        },
-    })
-    organizations?: Organization[];
+    // HyNexus: Organizations removed - will be used for Phase 2 "Communities" feature
 
-    // HyNexus: Relations to be added when Server and Vote entities are created
-    // @OneToMany(() => Server, server => server.owner)
-    // ownedServers: Server[];
-    //
+    // HyNexus: Server relation
+    @OneToMany(
+        () => Server,
+        (server) => server.owner,
+    )
+    ownedServers: Server[];
+
+    // HyNexus: Vote relation (to be added when Vote entity is created)
     // @OneToMany(() => Vote, vote => vote.user)
     // votes: Vote[];
 

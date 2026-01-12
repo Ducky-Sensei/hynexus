@@ -85,14 +85,14 @@ POST /auth/logout
 
 ---
 
-#### 4. **Product Module** (`src/app/product/`)
-**Status**: ❌ **NOT NEEDED** - Replace with Server module
+#### 4. **Server Module** (`src/app/server/`)
+**Status**: 🆕 **IN PROGRESS** - Replacing Product module
 
-This is a demo/scaffold module. We'll create a similar structure for:
-- Server management
-- Vote management
-- Staff listings
-- Reviews
+This replaces the demo Product module with the core Server module for:
+- Server management (CRUD operations)
+- Vote management (24-hour cooldown)
+- Staff listings (recruitment system)
+- Reviews (coming in Phase 2)
 
 ---
 
@@ -641,7 +641,7 @@ apps/api/src/app/
 ├── admin/              🆕 CREATE (Phase 3)
 │   ├── admin.controller.ts
 │   └── admin.service.ts
-├── product/            ❌ DELETE OR IGNORE
+├── product/            ❌ REMOVED - Replaced with Server module
 ├── organization/       🤔 KEEP FOR COMMUNITIES (Phase 2)
 ├── health/             ✅ KEEP
 └── theme/              ❓ OPTIONAL - KEEP IF FRONTEND USES IT
@@ -697,7 +697,7 @@ pnpm migration:run
 🆕 achievements (CREATE - PHASE 2)
 🆕 user_achievements (CREATE - PHASE 2)
 
-❌ products (DELETE OR IGNORE)
+❌ products (REMOVED - Replaced with servers table)
 ```
 
 ---

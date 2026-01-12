@@ -13,3 +13,6 @@ export type {
 
 // Auth schemas
 export { LoginRequestSchema, RegisterRequestSchema } from './auth';
+
+// Theme types
+export type { Theme, ThemeColors, ThemeMode } from './theme';

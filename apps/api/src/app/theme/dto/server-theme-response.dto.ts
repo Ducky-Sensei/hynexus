@@ -1,13 +1,16 @@
+import type { Theme } from '@hynexus/types';
 import { Exclude, Expose } from 'class-transformer';
-import type { Theme } from '../../organization/organization.entity';
 
 @Exclude()
-export class CustomerThemeResponseDto {
+export class ServerThemeResponseDto {
     @Expose()
-    customerId: string;
+    serverId: string;
 
     @Expose()
-    customerName: string;
+    serverSlug: string;
+
+    @Expose()
+    serverName: string;
 
     @Expose()
     theme: Theme;

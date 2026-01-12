@@ -1,9 +1,9 @@
 import { INestApplication, Logger } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { DataSource } from 'typeorm';
-import { Product } from '../../src/app/product/product.entity';
 import { Permission } from '../../src/app/rbac/entities/permission.entity';
 import { Role } from '../../src/app/rbac/entities/role.entity';
+import { Server } from '../../src/app/server/server.entity';
 import { User } from '../../src/app/user/user.entity';
 
 export async function seedDatabase(app: INestApplication): Promise<void> {
@@ -15,8 +15,8 @@ export async function seedDatabase(app: INestApplication): Promise<void> {
 
     const permissions = await seedPermissions(dataSource);
     const roles = await seedRoles(dataSource, permissions);
-    await seedUsers(dataSource, roles);
-    await seedProducts(dataSource);
+    const users = await seedUsers(dataSource, roles);
+    await seedServers(dataSource, users);
 
     Logger.log('Database seeding completed');
 }
@@ -33,10 +33,11 @@ async function seedPermissions(dataSource: DataSource): Promise<Permission[]> {
     const permissionRepository = dataSource.getRepository(Permission);
 
     const permissions = [
-        { resource: 'products', action: 'read', description: 'Read products' },
-        { resource: 'products', action: 'create', description: 'Create products' },
-        { resource: 'products', action: 'update', description: 'Update products' },
-        { resource: 'products', action: 'delete', description: 'Delete products' },
+        { resource: 'servers', action: 'read', description: 'Read servers' },
+        { resource: 'servers', action: 'create', description: 'Create servers' },
+        { resource: 'servers', action: 'update', description: 'Update servers' },
+        { resource: 'servers', action: 'delete', description: 'Delete servers' },
+        { resource: 'servers', action: 'approve', description: 'Approve/reject servers' },
         { resource: 'users', action: 'read', description: 'Read users' },
         { resource: 'users', action: 'create', description: 'Create users' },
         { resource: 'users', action: 'update', description: 'Update users' },
@@ -74,7 +75,7 @@ async function seedRoles(dataSource: DataSource, permissions: Permission[]): Pro
     return saved;
 }
 
-async function seedUsers(dataSource: DataSource, roles: Role[]): Promise<void> {
+async function seedUsers(dataSource: DataSource, roles: Role[]): Promise<User[]> {
     const userRepository = dataSource.getRepository(User);
 
     const hashedPassword = await bcrypt.hash('Foobar1!', 10);
@@ -86,57 +87,62 @@ async function seedUsers(dataSource: DataSource, roles: Role[]): Promise<void> {
         {
             email: 'admin@admin.com',
             password: hashedPassword,
-            name: 'Admin User',
+            name: 'Platform Admin',
+            username: 'admin',
             isActive: true,
+            isAdmin: true, // Platform administrator - can moderate entire site
             authProvider: 'password',
+            emailVerified: true,
             roles: [adminRole],
         },
         {
             email: 'user@user.com',
             password: hashedPassword,
             name: 'Regular User',
+            username: 'regularuser',
             isActive: true,
+            isAdmin: false, // Regular user - can only manage their own servers
             authProvider: 'password',
+            emailVerified: true,
             roles: [userRole],
         },
     ];
 
-    await userRepository.save(users);
+    const savedUsers = await userRepository.save(users);
     Logger.log(
-        `Seeded ${users.length} users (admin@admin.com / user@user.com - password: Foobar1!)`,
+        `Seeded ${savedUsers.length} users (admin@admin.com / user@user.com - password: Foobar1!)`,
     );
+    return savedUsers;
 }
 
-async function seedProducts(dataSource: DataSource): Promise<void> {
-    const productRepository = dataSource.getRepository(Product);
+async function seedServers(dataSource: DataSource, users: User[]): Promise<void> {
+    const serverRepository = dataSource.getRepository(Server);
 
-    const products = [
+    const adminUser = users.find((u) => u.email === 'admin@admin.com')!;
+
+    const servers = [
         {
-            name: 'Laptop',
-            quantity: 10,
-            unit: 'piece',
-            price: 999.99,
-            currency: 'USD',
-            isActive: true,
-        },
-        {
-            name: 'Mouse',
-            quantity: 50,
-            unit: 'piece',
-            price: 29.99,
-            currency: 'USD',
-            isActive: true,
-        },
-        {
-            name: 'Keyboard',
-            quantity: 30,
-            unit: 'piece',
-            price: 79.99,
-            currency: 'USD',
-            isActive: true,
+            name: 'Epic Survival Server',
+            slug: 'epic-survival-server',
+            ipAddress: 'play.epicserver.com',
+            port: 3000,
+            description:
+                'Welcome to Epic Survival Server! Join our friendly community and embark on an adventure in a custom-crafted world. We feature custom plugins, weekly events, and an active staff team. Perfect for both new and experienced players!',
+            websiteUrl: 'https://epicserver.com',
+            discordUrl: 'https://discord.gg/epicserver',
+            category: 'Survival',
+            region: 'NA',
+            language: 'en',
+            maxPlayers: 100,
+            currentPlayers: 45,
+            status: 'approved',
+            isOnline: true,
+            verified: true,
+            featured: false,
+            ownerId: adminUser.id,
         },
     ];
 
-    await productRepository.save(products);
-    Logger.log(`Seeded ${products.length} products`);
+    await serverRepository.save(servers);
+    Logger.log(`Seeded ${servers.length} server (Epic Survival Server - Owner: admin@admin.com)`);
 }

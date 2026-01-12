@@ -1,42 +1,37 @@
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import type { Cache } from 'cache-manager';
-import { OrganizationService } from '../organization/organization.service';
-import { CustomerThemeResponseDto } from './dto/customer-theme-response.dto';
+import { ServerService } from '../server/server.service';
+import { ServerThemeResponseDto } from './dto/server-theme-response.dto';
 
 @Injectable()
 export class ThemeService {
     constructor(
-        private readonly organizationService: OrganizationService,
+        private readonly serverService: ServerService,
         @Inject(CACHE_MANAGER) private cacheManager: Cache,
     ) {}
 
-    async getCustomerTheme(customerId: string): Promise<CustomerThemeResponseDto> {
-        const cacheKey = `theme:customer:${customerId}`;
+    async getServerTheme(slug: string): Promise<ServerThemeResponseDto> {
+        const cacheKey = `theme:server:${slug}`;
 
-        const cached = await this.cacheManager.get<CustomerThemeResponseDto>(cacheKey);
+        const cached = await this.cacheManager.get<ServerThemeResponseDto>(cacheKey);
         if (cached) {
             return cached;
         }
 
-        const organization = await this.organizationService.findByCustomerId(customerId);
+        const server = await this.serverService.findBySlug(slug);
 
-        if (!organization) {
-            throw new NotFoundException(`No organization found with customerId '${customerId}'`);
+        if (!server.theme) {
+            throw new NotFoundException(`Server '${slug}' does not have a custom theme configured`);
         }
 
-        if (!organization.theme) {
-            throw new NotFoundException(
-                `Organization '${customerId}' does not have a custom theme configured`,
-            );
-        }
-
-        const response: CustomerThemeResponseDto = {
-            customerId: organization.customerId,
-            customerName: organization.name,
-            theme: organization.theme,
-            createdAt: organization.createdAt,
-            updatedAt: organization.updatedAt,
+        const response: ServerThemeResponseDto = {
+            serverId: server.id,
+            serverSlug: server.slug,
+            serverName: server.name,
+            theme: server.theme,
+            createdAt: server.createdAt,
+            updatedAt: server.updatedAt,
         };
 
         await this.cacheManager.set(cacheKey, response, 1800000);
@@ -44,8 +39,8 @@ export class ThemeService {
         return response;
     }
 
-    async invalidateCustomerThemeCache(customerId: string): Promise<void> {
-        const cacheKey = `theme:customer:${customerId}`;
+    async invalidateServerThemeCache(slug: string): Promise<void> {
+        const cacheKey = `theme:server:${slug}`;
         await this.cacheManager.del(cacheKey);
     }
 }

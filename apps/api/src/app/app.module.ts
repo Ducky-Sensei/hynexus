@@ -14,12 +14,10 @@ import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { HealthModule } from './health/health.module';
-import { OrganizationModule } from './organization/organization.module';
-import { ProductController } from './product/product.controller';
-import { Product } from './product/product.entity';
-import { ProductService } from './product/product.service';
 import { RbacModule } from './rbac/rbac.module';
+import { ServerModule } from './server/server.module';
 import { ThemeModule } from './theme/theme.module';
+import { UserModule } from './user/user.module';
 
 @Module({
     imports: [
@@ -35,9 +33,13 @@ import { ThemeModule } from './theme/theme.module';
         LoggerModule.forRootAsync({
             inject: [ConfigService],
             useFactory: (configService: ConfigService<Configuration, true>) => {
-                const loggingConfig = configService.get('logging', { infer: true });
+                const loggingConfig = configService.get('logging', {
+                    infer: true,
+                });
                 const appConfig = configService.get('app', { infer: true });
-                const prometheusConfig = configService.get('prometheus', { infer: true });
+                const prometheusConfig = configService.get('prometheus', {
+                    infer: true,
+                });
 
                 return {
                     pinoHttp: {
@@ -69,7 +71,9 @@ import { ThemeModule } from './theme/theme.module';
         ThrottlerModule.forRootAsync({
             inject: [ConfigService],
             useFactory: (configService: ConfigService<Configuration, true>) => {
-                const throttleConfig = configService.get('throttle', { infer: true });
+                const throttleConfig = configService.get('throttle', {
+                    infer: true,
+                });
 
                 return [
                     {
@@ -82,7 +86,9 @@ import { ThemeModule } from './theme/theme.module';
         TypeOrmModule.forRootAsync({
             inject: [ConfigService],
             useFactory: (configService: ConfigService<Configuration, true>) => {
-                const databaseConfig = configService.get('database', { infer: true });
+                const databaseConfig = configService.get('database', {
+                    infer: true,
+                });
 
                 return {
                     type: 'postgres' as const,
@@ -108,7 +114,9 @@ import { ThemeModule } from './theme/theme.module';
         PrometheusModule.registerAsync({
             inject: [ConfigService],
             useFactory: (configService: ConfigService<Configuration, true>) => {
-                const prometheusConfig = configService.get('prometheus', { infer: true });
+                const prometheusConfig = configService.get('prometheus', {
+                    infer: true,
+                });
 
                 return {
                     defaultMetrics: {
@@ -168,17 +176,16 @@ import { ThemeModule } from './theme/theme.module';
                 }
             },
         }),
-        TypeOrmModule.forFeature([Product]),
         AuthModule.forRoot(),
         RbacModule,
         HealthModule,
-        OrganizationModule,
         ThemeModule,
+        ServerModule,
+        UserModule,
     ],
-    controllers: [AppController, ProductController],
+    controllers: [AppController],
     providers: [
         AppService,
-        ProductService,
         {
             provide: APP_GUARD,
             useClass: JwtAuthGuard,

@@ -42,7 +42,7 @@ hynexus/
 │   ├── config/
 │   │   └── typeorm.config.ts   # TypeORM configuration
 │   ├── migrations/              # Database migrations
-│   ├── product/                 # Example product module
+│   ├── server/                  # Server listing module (HyNexus core feature)
 │   ├── main.ts                  # Application entry point
 │   └── main-dev.ts             # Development container setup
 ├── test/                        # E2E tests
@@ -59,13 +59,13 @@ The application follows NestJS module-based architecture:
 - Root module that imports all feature modules
 - Contains the root controller with health check endpoint
 
-### Product Module (Example)
-- Demonstrates a typical feature module structure
+### Server Module
+- Core HyNexus feature for server listing management
 - Includes:
-  - Controller (handles HTTP requests)
-  - Service (business logic)
-  - Entity (database model)
-  - DTOs (data transfer objects)
+  - Controller (handles HTTP requests for server CRUD)
+  - Service (business logic for server management)
+  - Entity (database model for servers)
+  - DTOs (data transfer objects for validation)
 
 ### Configuration
 - TypeORM configuration in `src/config/typeorm.config.ts`
@@ -77,7 +77,7 @@ The application follows NestJS module-based architecture:
 ### `src/main.ts`
 - Standard NestJS application bootstrap
 - Used for production builds
-- Connects to external database
+- Connects to external PostgreSQL database
 
 ### `src/main-dev.ts`
 - Development-specific bootstrap
