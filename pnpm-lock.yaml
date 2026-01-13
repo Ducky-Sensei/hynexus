@@ -268,8 +268,8 @@ importers:
   apps/web:
     dependencies:
       '@datadog/browser-rum':
-        specifier: ^6.25.1
-        version: 6.25.1
+        specifier: ^6.25.3
+        version: 6.25.3
       '@hookform/resolvers':
         specifier: ^5.2.2
         version: 5.2.2(react-hook-form@7.69.0(react@19.2.3))
@@ -1329,16 +1329,16 @@ packages:
     resolution: {integrity: sha512-Vd/9EVDiu6PPJt9yAh6roZP6El1xHrdvIVGjyBsHR0RYwNHgL7FJPyIIW4fANJNG6FtyZfvlRPpFI4ZM/lubvw==}
     engines: {node: '>=18'}
 
-  '@datadog/browser-core@6.25.1':
-    resolution: {integrity: sha512-Mir/4g/EjtknQaP4QIOFNWwd6rnjvmw5SJKaFNUAQ94d59RKsbAy8hu2sfMSOaQ5TmHjf/6Qmrd0LfRK1FTt+Q==}
+  '@datadog/browser-core@6.25.3':
+    resolution: {integrity: sha512-rBth2l89RTxsKtZObdOiFKjt+Ii+Uar+siaP4n9CPP8tCtMyAwrzrfF9apiyUiGUP8RsP9t49bcR4qtlRG+xZg==}
 
-  '@datadog/browser-rum-core@6.25.1':
-    resolution: {integrity: sha512-xt867A7cZTnO2DvSKUD7QrnMGfS8rXm777x//uq6PbliuPa2+/B23OhTot14riUWV2kXiJ+dzQC08Ibj9i0Xwg==}
+  '@datadog/browser-rum-core@6.25.3':
+    resolution: {integrity: sha512-cF/n3GcGMdVJ7d6xMtYOmqC0GVKsbkVVtj6wYPSGU14ov84lKFMeQsbApRNsemQCsjg0CmAwx+rh0tIe+8Meag==}
 
-  '@datadog/browser-rum@6.25.1':
-    resolution: {integrity: sha512-8yx8++wSZZ0RkrTT2VzF9V639veGvnStnrZRsVS2kXWht4ZLQ7fxk3RXIGEUB9fHC4B0XIn9U3uod/Z+qCrSQw==}
+  '@datadog/browser-rum@6.25.3':
+    resolution: {integrity: sha512-B03qeUNE+eHUbSv7SynSdbMUpI+ibVuDe2sMQi/hX/vi8NYEDZZOf+iM+GihJgT+ZeN38xku2AfNr8kJlYnQXQ==}
     peerDependencies:
-      '@datadog/browser-logs': 6.25.1
+      '@datadog/browser-logs': 6.25.3
     peerDependenciesMeta:
       '@datadog/browser-logs':
         optional: true
@@ -10656,16 +10656,16 @@ snapshots:
 
   '@csstools/css-tokenizer@3.0.4': {}
 
-  '@datadog/browser-core@6.25.1': {}
+  '@datadog/browser-core@6.25.3': {}
 
-  '@datadog/browser-rum-core@6.25.1':
+  '@datadog/browser-rum-core@6.25.3':
     dependencies:
-      '@datadog/browser-core': 6.25.1
+      '@datadog/browser-core': 6.25.3
 
-  '@datadog/browser-rum@6.25.1':
+  '@datadog/browser-rum@6.25.3':
     dependencies:
-      '@datadog/browser-core': 6.25.1
-      '@datadog/browser-rum-core': 6.25.1
+      '@datadog/browser-core': 6.25.3
+      '@datadog/browser-rum-core': 6.25.3
 
   '@datadog/flagging-core@0.2.0(@openfeature/core@1.9.1)':
     dependencies:
